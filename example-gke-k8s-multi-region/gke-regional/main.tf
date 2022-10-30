@@ -27,7 +27,7 @@ variable "subnetwork" {
   default = "default"
 }
 
-variable "project_id" {
+variable "project" {
 #  default = "wx-poc-devops-chapter-dev"
   default = ""
 }
@@ -46,7 +46,7 @@ variable "project_id" {
 #data "google_container_engine_versions" "gke_versions" {}
 
 resource "google_container_cluster" "default" {
-  project            = var.project_id
+  project            = var.project
   name               = var.cluster_name
   location           = var.region
   initial_node_count = var.node_count
@@ -71,22 +71,22 @@ resource "google_container_cluster" "default" {
     ]
 
     labels = {
-      env = var.project_id
+      env = var.project
     }
 
     # preemptible  = true
     machine_type = "n1-standard-1"
-    tags         = ["gke-node", "${var.project_id}-gke"]
+    tags         = ["gke-node", "${var.project}-gke"]
     metadata = {
       disable-legacy-endpoints = "true"
     }
   }
 
   // Wait for the GCE LB controller to cleanup the resources.
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "sleep 90"
-  }
+#  provisioner "local-exec" {
+#    when    = "destroy"
+#    command = "sleep 90"
+#  }
 }
 
 #output "instance_groups" {
