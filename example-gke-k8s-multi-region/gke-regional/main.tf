@@ -15,7 +15,7 @@ variable "node_count" {
 }
 
 variable "tags" {
-  type    = "list"
+#  type    = "list"
   default = ["testing cluster", "poc"]
 }
 
@@ -64,9 +64,9 @@ resource "google_container_cluster" "default" {
   }
 }
 
-output "instance_groups" {
-  value = google_container_cluster.default.instance_group_urls
-}
+#output "instance_groups" {
+#  value = google_container_cluster.default.instance_group_urls
+#}
 
 output "endpoint" {
   value = google_container_cluster.default.endpoint

@@ -7,12 +7,12 @@ variable "region2_cluster_name" {
 }
 
 variable "region1" {
-#  default = "us-west1" # Oregon
+  #  default = "us-west1" # Oregon
   default = "australia-southeast1" # Sydney
 }
 
 variable "region2" {
-#  default = "us-east4" # Las Vegas
+  #  default = "us-east4" # Las Vegas
   default = "australia-southeast2" # Melbourne
 }
 
@@ -81,103 +81,103 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.cluster2.cluster_ca_certificate)
 }
 
-module "cluster1_app" {
-  source      = "./k8s-app"
-  external_ip = module.glb.external_ip
-  node_port   = 30000
+#module "cluster1_app" {
+#  source      = "./k8s-app"
+#  external_ip = module.glb.external_ip
+#  node_port   = 30000
+#
+#  providers = {
+#    kubernetes = "kubernetes.cluster1"
+#  }
+#}
 
-  providers = {
-    kubernetes = "kubernetes.cluster1"
-  }
-}
+#module "cluster2_app" {
+#  source      = "./k8s-app"
+#  external_ip = module.glb.external_ip
+#  node_port   = 30000
+#
+#  providers = {
+#    kubernetes = "kubernetes.cluster2"
+#  }
+#}
 
-module "cluster2_app" {
-  source      = "./k8s-app"
-  external_ip = module.glb.external_ip
-  node_port   = 30000
+#module "glb" {
+#  source            = "GoogleCloudPlatform/lb-http/google"
+#  version           = "1.0.10"
+#  name              = "gke-multi-regional"
+#  target_tags       = ["tf-gke-region1", "tf-gke-region2"]
+#  firewall_networks = [google_compute_network.default.name]
+#
+#  backends = {
+#    "0" = [
+#      {
+#        group = element(module.cluster1.instance_groups, 0)
+#      },
+#      {
+#        group = element(module.cluster1.instance_groups, 1)
+#      },
+#      {
+#        group = element(module.cluster1.instance_groups, 2)
+#      },
+#      {
+#        group = element(module.cluster2.instance_groups, 0)
+#      },
+#      {
+#        group = element(module.cluster2.instance_groups, 1)
+#      },
+#      {
+#        group = element(module.cluster2.instance_groups, 2)
+#      },
+#    ]
+#  }
+#
+#  backend_params = [
+#    // health check path, port name, port number, timeout seconds.
+#    "/,http,30000,10",
+#  ]
+#}
 
-  providers = {
-    kubernetes = "kubernetes.cluster2"
-  }
-}
+#module "cluster1_named_port_1" {
+#  source         = "github.com/danisla/terraform-google-named-ports"
+#  instance_group = element(module.cluster1.instance_groups, 0)
+#  name           = "http"
+#  port           = "30000"
+#}
 
-module "glb" {
-  source            = "GoogleCloudPlatform/lb-http/google"
-  version           = "1.0.10"
-  name              = "gke-multi-regional"
-  target_tags       = ["tf-gke-region1", "tf-gke-region2"]
-  firewall_networks = [google_compute_network.default.name]
+#module "cluster1_named_port_2" {
+#  source         = "github.com/danisla/terraform-google-named-ports"
+#  instance_group = element(module.cluster1.instance_groups, 1)
+#  name           = "http"
+#  port           = "30000"
+#}
 
-  backends = {
-    "0" = [
-      {
-        group = element(module.cluster1.instance_groups, 0)
-      },
-      {
-        group = element(module.cluster1.instance_groups, 1)
-      },
-      {
-        group = element(module.cluster1.instance_groups, 2)
-      },
-      {
-        group = element(module.cluster2.instance_groups, 0)
-      },
-      {
-        group = element(module.cluster2.instance_groups, 1)
-      },
-      {
-        group = element(module.cluster2.instance_groups, 2)
-      },
-    ]
-  }
+#module "cluster1_named_port_3" {
+#  source         = "github.com/danisla/terraform-google-named-ports"
+#  instance_group = element(module.cluster1.instance_groups, 2)
+#  name           = "http"
+#  port           = "30000"
+#}
 
-  backend_params = [
-    // health check path, port name, port number, timeout seconds.
-    "/,http,30000,10",
-  ]
-}
+#module "cluster2_named_port_1" {
+#  source         = "github.com/danisla/terraform-google-named-ports"
+#  instance_group = element(module.cluster2.instance_groups, 0)
+#  name           = "http"
+#  port           = "30000"
+#}
 
-module "cluster1_named_port_1" {
-  source         = "github.com/danisla/terraform-google-named-ports"
-  instance_group = element(module.cluster1.instance_groups, 0)
-  name           = "http"
-  port           = "30000"
-}
+#module "cluster2_named_port_2" {
+#  source         = "github.com/danisla/terraform-google-named-ports"
+#  instance_group = element(module.cluster2.instance_groups, 1)
+#  name           = "http"
+#  port           = "30000"
+#}
 
-module "cluster1_named_port_2" {
-  source         = "github.com/danisla/terraform-google-named-ports"
-  instance_group = element(module.cluster1.instance_groups, 1)
-  name           = "http"
-  port           = "30000"
-}
-
-module "cluster1_named_port_3" {
-  source         = "github.com/danisla/terraform-google-named-ports"
-  instance_group = element(module.cluster1.instance_groups, 2)
-  name           = "http"
-  port           = "30000"
-}
-
-module "cluster2_named_port_1" {
-  source         = "github.com/danisla/terraform-google-named-ports"
-  instance_group = element(module.cluster2.instance_groups, 0)
-  name           = "http"
-  port           = "30000"
-}
-
-module "cluster2_named_port_2" {
-  source         = "github.com/danisla/terraform-google-named-ports"
-  instance_group = element(module.cluster2.instance_groups, 1)
-  name           = "http"
-  port           = "30000"
-}
-
-module "cluster2_named_port_3" {
-  source         = "github.com/danisla/terraform-google-named-ports"
-  instance_group = element(module.cluster2.instance_groups, 2)
-  name           = "http"
-  port           = "30000"
-}
+#module "cluster2_named_port_3" {
+#  source         = "github.com/danisla/terraform-google-named-ports"
+#  instance_group = element(module.cluster2.instance_groups, 2)
+#  name           = "http"
+#  port           = "30000"
+#}
 
 output "cluster1-name" {
   value = var.region1_cluster_name
@@ -195,6 +195,6 @@ output "cluster2-region" {
   value = var.region2
 }
 
-output "load-balancer-ip" {
-  value = module.glb.external_ip
-}
+#output "load-balancer-ip" {
+#  value = module.glb.external_ip
+#}

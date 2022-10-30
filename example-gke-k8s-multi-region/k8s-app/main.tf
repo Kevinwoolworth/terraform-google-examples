@@ -10,7 +10,7 @@ resource "kubernetes_service" "default" {
   spec {
     type             = "NodePort"
     session_affinity = "ClientIP"
-    external_ips     = ["${var.external_ip}"]
+    external_ips     = [var.external_ip]
 
     selector {
       run = "example"
@@ -21,7 +21,7 @@ resource "kubernetes_service" "default" {
       protocol    = "TCP"
       port        = 80
       target_port = 80
-      node_port   = "${var.node_port}"
+      node_port   = var.node_port
     }
   }
 }
