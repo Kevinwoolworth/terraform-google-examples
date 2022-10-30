@@ -90,6 +90,8 @@ resource "kubernetes_replication_controller" "default" {
           name = "example"
         }
       }
+      metadata {}
+      spec {}
     }
   }
 }

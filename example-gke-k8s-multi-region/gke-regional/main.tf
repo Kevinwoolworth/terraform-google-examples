@@ -27,6 +27,11 @@ variable "subnetwork" {
   default = "default"
 }
 
+variable "project_id" {
+#  default = "wx-poc-devops-chapter-dev"
+  default = ""
+}
+
 #data "google_compute_zones" "available" {
 #  region = var.region
 #}
@@ -41,7 +46,7 @@ variable "subnetwork" {
 #data "google_container_engine_versions" "gke_versions" {}
 
 resource "google_container_cluster" "default" {
-  project = "wx-poc-devops-chapter-dev"
+  project            = var.project_id
   name               = var.cluster_name
   location           = var.region
   initial_node_count = var.node_count
@@ -56,6 +61,25 @@ resource "google_container_cluster" "default" {
 
   node_config {
 #    tags = [var.tags]
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloudkms",
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/compute",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+
+    labels = {
+      env = var.project_id
+    }
+
+    # preemptible  = true
+    machine_type = "n1-standard-1"
+    tags         = ["gke-node", "${var.project_id}-gke"]
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
   }
 
   // Wait for the GCE LB controller to cleanup the resources.
