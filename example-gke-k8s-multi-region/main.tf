@@ -47,7 +47,7 @@ resource "google_compute_subnetwork" "region2" {
 
 module "cluster1" {
   source       = "./gke-regional"
-  region       = var.region1
+  region       = "australia-southeast1" #var.region1
   cluster_name = var.region1_cluster_name
   tags         = ["tf-gke-region1"]
   network      = google_compute_subnetwork.region1.network
@@ -56,7 +56,7 @@ module "cluster1" {
 
 module "cluster2" {
   source       = "./gke-regional"
-  region       = var.region2
+  region       = "australia-southeast2" #var.region2
   cluster_name = var.region2_cluster_name
   tags         = ["tf-gke-region2"]
   network      = google_compute_subnetwork.region2.network

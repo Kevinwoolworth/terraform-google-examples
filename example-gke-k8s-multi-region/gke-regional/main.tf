@@ -1,5 +1,5 @@
 variable "region" {
-  default = "us-west1"
+  default = "australia-southeast1"
 }
 
 variable "cluster_name" {
@@ -27,16 +27,16 @@ variable "subnetwork" {
   default = "default"
 }
 
-data "google_compute_zones" "available" {
-  region = var.region
-}
-
-data "google_container_engine_versions" "default" {
-#  zone = element(data.google_compute_zones.available.names, 0)
-#  provider       =
-#  location       = "us-central1-b"
-#  version_prefix = "1.12."
-}
+#data "google_compute_zones" "available" {
+#  region = var.region
+#}
+#
+#data "google_container_engine_versions" "default" {
+##  zone = element(data.google_compute_zones.available.names, 0)
+##  provider       =
+#  location        = "australia-southeast1"
+##  version_prefix = "1.12."
+#}
 
 #data "google_container_engine_versions" "gke_versions" {}
 
@@ -44,7 +44,7 @@ resource "google_container_cluster" "default" {
   name               = var.cluster_name
   location           = var.region
   initial_node_count = var.node_count
-  min_master_version = var.master_version != "" ? var.master_version : data.google_container_engine_versions.default.latest_master_version
+  min_master_version = "1.23.12" #var.master_version != "" ? var.master_version : data.google_container_engine_versions.default.latest_master_version
   network            = var.network
   subnetwork         = var.subnetwork
 
@@ -54,7 +54,7 @@ resource "google_container_cluster" "default" {
   enable_legacy_abac = true
 
   node_config {
-    tags = [var.tags]
+#    tags = [var.tags]
   }
 
   // Wait for the GCE LB controller to cleanup the resources.
