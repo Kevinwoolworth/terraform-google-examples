@@ -10,7 +10,7 @@ resource "kubernetes_service" "nginx" {
   spec {
     type             = "NodePort"
     session_affinity = "ClientIP"
-    external_ips     = ["${var.external_ip}"]
+    external_ips     = [var.external_ip]
 
     selector {
       run = "nginx"
@@ -21,7 +21,7 @@ resource "kubernetes_service" "nginx" {
       protocol    = "TCP"
       port        = 80
       target_port = 80
-      node_port   = "${var.node_port}"
+      node_port   = var.node_port
     }
   }
 }
@@ -58,6 +58,8 @@ resource "kubernetes_replication_controller" "nginx" {
           }
         }
       }
+      metadata {}
+      spec {}
     }
   }
 }

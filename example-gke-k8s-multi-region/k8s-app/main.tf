@@ -31,9 +31,10 @@ resource "kubernetes_config_map" "default" {
     name = "example"
   }
 
-  data {
-    index.php = "${file("${format("%s/index.php", path.module)}")}"
-  }
+#  data {
+#    "index.php" =  "${file("${path.module}/my_config_file.yml")}" # file(format("index.php", path.module))
+#    "${file("${path.module}/my_config_file.yml")}"
+#  }
 }
 
 resource "kubernetes_replication_controller" "default" {
