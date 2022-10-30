@@ -41,6 +41,7 @@ variable "subnetwork" {
 #data "google_container_engine_versions" "gke_versions" {}
 
 resource "google_container_cluster" "default" {
+  project = "wx-poc-devops-chapter-dev"
   name               = var.cluster_name
   location           = var.region
   initial_node_count = var.node_count

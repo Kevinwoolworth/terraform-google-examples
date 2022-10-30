@@ -27,11 +27,13 @@ provider "google" {
 data "google_client_config" "current" {}
 
 resource "google_compute_network" "default" {
+  project = "wx-poc-devops-chapter-dev"
   name                    = var.network_name
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "region1" {
+  project = "wx-poc-devops-chapter-dev"
   name          = var.network_name
   ip_cidr_range = "10.126.0.0/20"
   network       = google_compute_network.default.self_link
@@ -39,6 +41,7 @@ resource "google_compute_subnetwork" "region1" {
 }
 
 resource "google_compute_subnetwork" "region2" {
+  project = "wx-poc-devops-chapter-dev"
   name          = var.network_name
   ip_cidr_range = "10.127.0.0/20"
   network       = google_compute_network.default.self_link
