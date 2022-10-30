@@ -7,12 +7,10 @@ variable "region2_cluster_name" {
 }
 
 variable "region1" {
-  #  default = "us-west1" # Oregon
   default = "australia-southeast1" # Sydney
 }
 
 variable "region2" {
-  #  default = "us-east4" # Las Vegas
   default = "australia-southeast2" # Melbourne
 }
 
@@ -25,7 +23,7 @@ provider "google" {
 }
 
 locals {
-  project_id = "wx-poc-devops-chapter-dev"
+  project_id = "gcp-wow-rwds-admin-01-dev" #"wx-poc-devops-chapter-dev"
   region2 = "australia-southeast2" # Melbourne
   region1 = "australia-southeast1" # Sydney
   region1_cidr = "10.126.0.0/20"
@@ -33,28 +31,6 @@ locals {
 }
 
 data "google_client_config" "current" {}
-
-resource "google_compute_network" "default" {
-  project                 = local.project_id
-  name                    = var.network_name
-  auto_create_subnetworks = false
-}
-
-resource "google_compute_subnetwork" "region1" {
-  project       = local.project_id
-  name          = var.network_name
-  ip_cidr_range = local.region1_cidr
-  network       = google_compute_network.default.self_link
-  region        = local.region1
-}
-
-resource "google_compute_subnetwork" "region2" {
-  project       = local.project_id
-  name          = var.network_name
-  ip_cidr_range = local.region2_cidr
-  network       = google_compute_network.default.self_link
-  region        = local.region2
-}
 
 module "cluster1" {
   source       = "./gke-regional"
