@@ -24,44 +24,52 @@ provider "google" {
   region = var.region1
 }
 
+locals {
+  project_id = "wx-poc-devops-chapter-dev"
+  region2 = "australia-southeast2" # Melbourne
+  region1 = "australia-southeast1" # Sydney
+  region1_cidr = "10.126.0.0/20"
+  region2_cidr = "10.127.0.0/20"
+}
+
 data "google_client_config" "current" {}
 
 resource "google_compute_network" "default" {
-  project = "wx-poc-devops-chapter-dev"
+  project                 = local.project_id
   name                    = var.network_name
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "region1" {
-  project = "wx-poc-devops-chapter-dev"
+  project       = local.project_id
   name          = var.network_name
-  ip_cidr_range = "10.126.0.0/20"
+  ip_cidr_range = local.region1_cidr
   network       = google_compute_network.default.self_link
-  region        = var.region1
+  region        = local.region1
 }
 
 resource "google_compute_subnetwork" "region2" {
-  project = "wx-poc-devops-chapter-dev"
+  project       = local.project_id
   name          = var.network_name
-  ip_cidr_range = "10.127.0.0/20"
+  ip_cidr_range = local.region2_cidr
   network       = google_compute_network.default.self_link
-  region        = var.region2
+  region        = local.region2
 }
 
 module "cluster1" {
   source       = "./gke-regional"
-  region       = "australia-southeast1" #var.region1
+  region       = local.region1 # "australia-southeast1"
   cluster_name = var.region1_cluster_name
-  tags         = ["tf-gke-region1"]
+  tags         = ["tf-gke-region1", "poc"]
   network      = google_compute_subnetwork.region1.network
   subnetwork   = google_compute_subnetwork.region1.name
 }
 
 module "cluster2" {
   source       = "./gke-regional"
-  region       = "australia-southeast2" #var.region2
+  region       = local.region2 # "australia-southeast2" #var.region2
   cluster_name = var.region2_cluster_name
-  tags         = ["tf-gke-region2"]
+  tags         = ["tf-gke-region2", "poc"]
   network      = google_compute_subnetwork.region2.network
   subnetwork   = google_compute_subnetwork.region2.name
 }
@@ -182,22 +190,3 @@ provider "kubernetes" {
 #  port           = "30000"
 #}
 
-output "cluster1-name" {
-  value = var.region1_cluster_name
-}
-
-output "cluster2-name" {
-  value = var.region2_cluster_name
-}
-
-output "cluster1-region" {
-  value = var.region1
-}
-
-output "cluster2-region" {
-  value = var.region2
-}
-
-#output "load-balancer-ip" {
-#  value = module.glb.external_ip
-#}
