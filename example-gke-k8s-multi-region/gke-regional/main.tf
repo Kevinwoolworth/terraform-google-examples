@@ -16,7 +16,7 @@ variable "node_count" {
 
 variable "tags" {
   type    = "list"
-  default = []
+  default = ["testing cluster", "poc"]
 }
 
 variable "network" {
