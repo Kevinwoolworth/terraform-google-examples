@@ -42,15 +42,15 @@ module "cluster1" {
   subnetwork   = google_compute_subnetwork.region1.name
 }
 
-module "cluster2" {
-  source       = "./gke-regional"
-  project      = local.project_id
-  region       = local.region2 # "australia-southeast2" #var.region2
-  cluster_name = var.region2_cluster_name
-  tags         = ["tf-gke-region2", "poc"]
-  network      = google_compute_subnetwork.region2.network
-  subnetwork   = google_compute_subnetwork.region2.name
-}
+#module "cluster2" {
+#  source       = "./gke-regional"
+#  project      = local.project_id
+#  region       = local.region2 # "australia-southeast2" #var.region2
+#  cluster_name = var.region2_cluster_name
+#  tags         = ["tf-gke-region2", "poc"]
+#  network      = google_compute_subnetwork.region2.network
+#  subnetwork   = google_compute_subnetwork.region2.name
+#}
 
 provider "kubernetes" {
   alias                  = "cluster1"
@@ -61,14 +61,14 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.cluster1.cluster_ca_certificate)
 }
 
-provider "kubernetes" {
-  alias                  = "cluster2"
-  host                   = module.cluster2.endpoint
-  token                  = data.google_client_config.current.access_token
-  client_certificate     = base64decode(module.cluster2.client_certificate)
-  client_key             = base64decode(module.cluster2.client_key)
-  cluster_ca_certificate = base64decode(module.cluster2.cluster_ca_certificate)
-}
+#provider "kubernetes" {
+#  alias                  = "cluster2"
+#  host                   = module.cluster2.endpoint
+#  token                  = data.google_client_config.current.access_token
+#  client_certificate     = base64decode(module.cluster2.client_certificate)
+#  client_key             = base64decode(module.cluster2.client_key)
+#  cluster_ca_certificate = base64decode(module.cluster2.cluster_ca_certificate)
+#}
 
 #module "cluster1_app" {
 #  source      = "./k8s-app"
