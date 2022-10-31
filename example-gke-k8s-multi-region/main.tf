@@ -42,15 +42,15 @@ module "cluster1" {
   subnetwork   = google_compute_subnetwork.region1.name
 }
 
-#module "cluster2" {
-#  source       = "./gke-regional"
-#  project      = local.project_id
-#  region       = local.region2 # "australia-southeast2" #var.region2
-#  cluster_name = var.region2_cluster_name
-#  tags         = ["tf-gke-region2", "poc"]
-#  network      = google_compute_subnetwork.region2.network
-#  subnetwork   = google_compute_subnetwork.region2.name
-#}
+module "cluster2" {
+  source       = "./gke-regional"
+  project      = local.project_id
+  region       = local.region2 # "australia-southeast2" #var.region2
+  cluster_name = var.region2_cluster_name
+  tags         = ["tf-gke-region2", "poc"]
+  network      = google_compute_subnetwork.region2.network
+  subnetwork   = google_compute_subnetwork.region2.name
+}
 
 provider "kubernetes" {
   alias                  = "cluster1"
