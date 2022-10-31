@@ -47,7 +47,7 @@ module "cluster2" {
   project      = local.project_id
   region       = local.region2 # "australia-southeast2" #var.region2
   cluster_name = var.region2_cluster_name
-  tags         = ["tf-gke-region2", "poc"]
+  tags         = ["tf-gke-region2", "poc", "terraform"]
   network      = google_compute_subnetwork.region2.network
   subnetwork   = google_compute_subnetwork.region2.name
 }
